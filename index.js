@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
     if (error) return cb(error);
 
     // Emite uma mensagem para o usuario que acabou de logar no room
-    socket.emmit("message", {
+    socket.emit("message", {
       user: "admin",
       text: `${user.name}, welcome to ${user.room}`,
     });
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     // Emite uma mensagem para todos os outros usuarios do room que entrou mais uma pessoa
     socket.broadcast
       .to(user.room)
-      .emmit("message", { user: "admin", text: `${user.name} has joined` });
+      .emit("message", { user: "admin", text: ` ${user.name} has joined` });
 
     socket.join(user.room);
 
@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", (message, cb) => {
     const user = getUser(socket.id);
 
-    io.to(user.room).emmit("message", { user: user.name, text: message });
+    io.to(user.room).emit("message", { user: user.name, text: message });
 
     cb();
   });
