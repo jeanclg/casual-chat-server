@@ -43,13 +43,6 @@ io.on("connection", (socket) => {
       .to(user.room)
       .emit("message", { user: "admin", text: ` ${user.name} has joined` });
 
-    const users = getUsersInRoom(room);
-
-    // Emite uma mensagem para todos os outros usuarios do room que entrou mais uma pessoa
-    socket.broadcast
-      .to(user.room)
-      .emit("message", { user: "admin", text: ` ${users} ` });
-
     socket.join(user.room);
 
     cb();
