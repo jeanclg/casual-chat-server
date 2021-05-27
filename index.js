@@ -1,13 +1,13 @@
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
-const cors = require("cors");
+require("dotenv").config();
 
 const router = require("./router");
 const { addUser, removeUser, getUser, getUserInRoom } = require("./user");
 
 // Porta que rodará o servidor
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT);
 
 const app = express();
 
@@ -17,7 +17,7 @@ const server = http.createServer(app);
 // Garante que apenas a nossa página poderá acessar o servidor
 corsOptions = {
   cors: true,
-  origins: ["http://localhost:3000"],
+  origins: [process.env.REACT_APP_URL],
 };
 
 // instancia o socket.io no nosso servidor com nossa página
