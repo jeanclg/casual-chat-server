@@ -4,7 +4,7 @@ const http = require("http");
 require("dotenv").config();
 
 const router = require("./router");
-const { addUser, removeUser, getUser, getUserInRoom } = require("./user");
+const { addUser, removeUser, getUser, getUsersInRoom } = require("./user");
 
 // Porta que rodará o servidor
 const PORT = Number(process.env.PORT);
@@ -43,6 +43,13 @@ io.on("connection", (socket) => {
       .to(user.room)
       .emit("message", { user: "admin", text: ` ${user.name} has joined` });
 
+    const users = getUsersInRoom(room);
+
+    // Emite uma mensagem para todos os outros usuarios do room que entrou mais uma pessoa
+    socket.broadcast
+      .to(user.room)
+      .emit("message", { user: "admin", text: ` ${users} ` });
+
     socket.join(user.room);
 
     cb();
@@ -58,6 +65,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User had left!");
+    removeUser(socket.id);
   });
 });
 
