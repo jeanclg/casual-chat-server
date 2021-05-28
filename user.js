@@ -32,6 +32,6 @@ const removeUser = (id) => {
 const getUser = (id) => users.find((x) => x.id === id);
 
 // Pega todos os usuarios que estão no mesmo room
-const getUsersInRoom = (room) => users.find((x) => x.room === room);
+const getUsersInRoom = (room) => users.filter((x) => x.room === room);
 
 module.exports = { addUser, removeUser, getUser, getUsersInRoom };
