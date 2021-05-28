@@ -32,18 +32,23 @@ io.on("connection", (socket) => {
     // Caso de algum erro na criação do usuario é emitido uma mensagem de erro pela callback
     if (error) return cb(error);
 
+    socket.join(user.room);
+
     // Emite uma mensagem para o usuario que acabou de logar no room
     socket.emit("message", {
       user: "admin",
       text: `${user.name}, welcome to ${user.room}`,
     });
 
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
+
     // Emite uma mensagem para todos os outros usuarios do room que entrou mais uma pessoa
     socket.broadcast
       .to(user.room)
       .emit("message", { user: "admin", text: ` ${user.name} has joined` });
-
-    socket.join(user.room);
 
     cb();
   });
@@ -57,8 +62,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("User had left!");
-    removeUser(socket.id);
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit("message", {
+        user: "admin",
+        text: `${user.name} has left`,
+      });
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      });
+    }
   });
 });
 
