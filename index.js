@@ -40,6 +40,7 @@ io.on("connection", (socket) => {
       text: `${user.name}, welcome to ${user.room}`,
     });
 
+    // Emite para o cliente a lista com todos os usuarios online no room
     io.to(user.room).emit("roomData", {
       room: user.room,
       users: getUsersInRoom(user.room),
@@ -62,13 +63,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    // Remove o usuario da lista de usuarios do room assim que ele sai da tela
     const user = removeUser(socket.id);
-
     if (user) {
+      // Envia uma notificação para os outros usuarios que alguem saiu da sala
       io.to(user.room).emit("message", {
         user: "admin",
         text: `${user.name} has left`,
       });
+      // Atualiza a lista de usuarios online
       io.to(user.room).emit("roomData", {
         room: user.room,
         users: getUsersInRoom(user.room),
