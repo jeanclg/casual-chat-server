@@ -6,4 +6,4 @@ A web chat for study purposes using **NodeJS** for the server, **ReactJS** for t
 
 See the project [HERE](https://casualchat.netlify.app/).
 
-The frontend repository [HERE](https://github.com/jeanclg/lets-play-client/).
+The frontend repository [HERE](https://github.com/jeanclg/casual-chat-client).
